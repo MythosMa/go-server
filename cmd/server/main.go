@@ -2,18 +2,30 @@ package main
 
 import (
 	"fmt"
+	"game-server/internal/db"
+	"game-server/internal/user"
+	"game-server/internal/websocket"
+	"log"
 
 	"github.com/valyala/fasthttp"
-
-	"game-server/internal/websocket"
 )
 
 func main() {
+	if err := db.InitDB(); err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
+
+	defer db.DB.Close()
+
 	wsHandler := websocket.NewHandler()
 	requestHandler := func(ctx *fasthttp.RequestCtx) {
 		switch string(ctx.Path()) {
 		case "/":
 			fmt.Fprintf(ctx, "Welcome to the game server!")
+		case "/register":
+			user.Register(ctx)
+		case "/login":
+			user.Login(ctx)
 		case "/ws":
 			wsHandler.ServeHTTP(ctx)
 		default:
