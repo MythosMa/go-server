@@ -43,7 +43,7 @@ func (h *Handler) ServeHTTP(ctx *fasthttp.RequestCtx) {
 			}
 
 			log.Printf("收到玩家 %s 消息: %s", playerID, message)
-			h.playerManager.BroadcastMessage(messageType, message)
+			h.playerManager.BroadcastMessage(messageType, []byte(playerID+": "+string(message)))
 		}
 	})
 }
