@@ -1,5 +1,5 @@
 # 使用官方 Go 语言镜像作为基础镜像
-FROM golang:1.19 AS builder
+FROM golang:1.22.3 AS builder
 
 # 设置工作目录
 WORKDIR /app
@@ -29,4 +29,4 @@ COPY --from=builder /game-server .
 EXPOSE 9000
 
 # 设置容器启动时执行的命令
-CMD ["go run .\cmd\server\main.go"]
+CMD ["./game-server"]

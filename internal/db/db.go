@@ -11,7 +11,7 @@ var DB *sql.DB
 
 func InitDB() error {
 	var err error
-	dsn := "MythosMa:HakureiReimu16@tcp(127.0.0.1:3306)/go_game_server?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "MythosMa:HakureiReimu16@tcp(127.0.0.1:9001)/go_game_server?charset=utf8mb4&parseTime=True&loc=Local"
 	DB, err = sql.Open("mysql", dsn)
 
 	if err != nil {
