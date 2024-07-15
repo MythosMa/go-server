@@ -19,6 +19,9 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /game-server cmd/server/ma
 # 使用一个更小的基础镜像
 FROM alpine:latest
 
+# 安装必要的依赖
+RUN apk --no-cache add ca-certificates
+
 # 设置工作目录
 WORKDIR /root/
 

@@ -1,26 +1,30 @@
-version: '0.01'
+version: '0.0.1'
 
 services:
   db:
-    image: mysql
+    image: mysql:8.4
     container_name: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: example
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
-      - "9001:3306"
+      - "9000:3306"
+    env_file:
+      - .env
 
   app:
     build: .
     container_name: game-server
-    environment:
-      DATABASE_URL: "${MYSQL_USER}:${MYSQL_PASSWORD}@tcp(db:3306)/${MYSQL_DATABASE}"
     ports:
-      - "9000:9000"
+      - "9001:9000"
+    environment:
+      MYSQL_HOST: db
+    env_file:
+      - .env
     depends_on:
       - db
 
