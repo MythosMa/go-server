@@ -28,8 +28,14 @@ WORKDIR /root/
 # 将编译好的二进制文件从构建阶段复制到这个镜像
 COPY --from=builder /game-server .
 
-# 声明容器监听的端口
-EXPOSE 9000
+# 复制 .env 文件到镜像中
+COPY .env .
 
-# 设置容器启动时执行的命令
-CMD ["./game-server"]
+# 设置环境变量
+ENV PORT=3000
+
+# 暴露端口
+EXPOSE 3000
+
+# 使用 .env 文件加载环境变量
+CMD ["sh", "-c", "source .env && ./game-server"]

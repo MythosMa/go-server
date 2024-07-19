@@ -34,7 +34,7 @@ func main() {
 		}
 	}
 
-	address := "0.0.0.0:9000"
+	address := "0.0.0.0:3000"
 	fmt.Printf("Server started on %s\n", address)
 	if err := fasthttp.ListenAndServe(address, requestHandler); err != nil {
 		fmt.Println("Error starting server:", err)

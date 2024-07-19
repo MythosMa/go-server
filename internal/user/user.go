@@ -9,14 +9,15 @@ import (
 
 	"github.com/valyala/fasthttp"
 	"golang.org/x/crypto/bcrypt"
+
 )
 
 type User struct {
-	ID           int
-	Username     string
-	Password     string
-	CreatedAt    string
-	AvatarBase64 string
+	ID        int
+	Username  string
+	Password  string
+	CreatedAt string
+	Avatar    string
 }
 
 func Register(ctx *fasthttp.RequestCtx) {
@@ -26,7 +27,7 @@ func Register(ctx *fasthttp.RequestCtx) {
 	}
 	username := string(ctx.FormValue("username"))
 	password := string(ctx.FormValue("password"))
-	avatarBase64 := string(ctx.FormValue("avatar"))
+	avatar := string(ctx.FormValue("avatar"))
 
 	if username == "" || password == "" {
 		ctx.Error("用户名和密码不能为空", fasthttp.StatusBadRequest)
@@ -39,7 +40,7 @@ func Register(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	_, err = db.DB.Exec("INSERT INTO users (username, password, avatar_base64) VALUES (?, ?, ?)", username, string(hashedPassword), avatarBase64)
+	_, err = db.DB.Exec("INSERT INTO users (username, password, avatar) VALUES (?, ?, ?)", username, string(hashedPassword), avatar)
 	if err != nil {
 		log.Println(err)
 		if strings.Contains(err.Error(), "Duplicate entry") {
@@ -72,8 +73,8 @@ func Login(ctx *fasthttp.RequestCtx) {
 
 	// 从数据库中获取用户信息
 	var storedPassword string
-	var avatarBase64 string
-	err := db.DB.QueryRow("SELECT password, avatar_base64 FROM users WHERE username = ?", username).Scan(&storedPassword, &avatarBase64)
+	var avatar string
+	err := db.DB.QueryRow("SELECT password, avatar FROM users WHERE username = ?", username).Scan(&storedPassword, &avatar)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			ctx.Error("用户名或密码错误", fasthttp.StatusUnauthorized)
@@ -91,5 +92,5 @@ func Login(ctx *fasthttp.RequestCtx) {
 		return
 	}
 
-	fmt.Fprintf(ctx, "用户登录成功。头像数据（Base64）：%s", avatarBase64)
+	fmt.Fprintf(ctx, "用户登录成功。头像数据（Base64）：%s", avatar)
 }
